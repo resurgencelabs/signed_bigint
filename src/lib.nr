@@ -6,6 +6,8 @@ struct Signed_Bigint {
     val: noir_bigint::BigUint56,
 }
 
+
+// Create a Signed_Bigint variable easily
 fn toSignedBigint(s: bool, v: noir_bigint::BigUint56) -> Signed_Bigint {
     
     let sb = Signed_Bigint {
@@ -16,15 +18,22 @@ fn toSignedBigint(s: bool, v: noir_bigint::BigUint56) -> Signed_Bigint {
 }
 
 
-
+// Outputs the Big Int component of a Signed_Bigint
 fn val(sb: Signed_Bigint) -> noir_bigint::BigUint56 {
     sb.val
 }
 
+
+// Outputs the sign of a Signed_Bigint 
+// true => >0
+// false => <0
+// the sign of 0 is non consequential
 fn sign(sb: Signed_Bigint) -> bool {
     sb.sign
 }
 
+
+// Generates a Signed_Bigint variable with value 0
 fn zero() -> Signed_Bigint {
     let b = noir_bigint::BigUint56 { limbs: [0 as u56; noir_bigint::NUM_LIMBS] };
     let sb = Signed_Bigint {
@@ -34,6 +43,8 @@ fn zero() -> Signed_Bigint {
     sb
 }
 
+
+// Generates a Signed_Bigint variable with value 1
 fn one() -> Signed_Bigint {
     let mut b = noir_bigint::BigUint56 { limbs: [0 as u56; noir_bigint::NUM_LIMBS] };
     b.limbs[0] = 1;
@@ -44,6 +55,8 @@ fn one() -> Signed_Bigint {
     sb
 }
 
+
+// Generates a Signed_Bigint variable with value -1
 fn negative_one() -> Signed_Bigint {
     let mut b = noir_bigint::BigUint56 { limbs: [0 as u56; noir_bigint::NUM_LIMBS] };
     b.limbs[0] = 1;
@@ -54,6 +67,8 @@ fn negative_one() -> Signed_Bigint {
     sb
 }
 
+
+// Creates a Signed_Bigint variable with Big Int part same as the specified u56 value
 fn from_u56(s: bool, v: u56) -> Signed_Bigint {
     let mut b = noir_bigint::BigUint56 { limbs: [0 as u56; noir_bigint::NUM_LIMBS] };
     b.limbs[0] = v;
@@ -64,6 +79,8 @@ fn from_u56(s: bool, v: u56) -> Signed_Bigint {
     sb
 }
 
+
+// Create a Signed_Bigint variable from a byte array
 fn from_bytes(s: bool, bytes: [u8]) -> Signed_Bigint {
    
     let mut b = noir_bigint::BigUint56::from_bytes(bytes);
@@ -75,15 +92,20 @@ fn from_bytes(s: bool, bytes: [u8]) -> Signed_Bigint {
     sb
 }
 
+
+// Converts a Signed_Bigint to its root Byte Array in u8
 fn to_bytes(sb: Signed_Bigint) -> (bool, [u8;noir_bigint::MAX_BYTES]) {
     let bytes = sb.val.to_bytes();
     (sb.sign, bytes)
 }
 
+
+// Converts a Signed_Bigint to its root Bit Array 
 fn to_bits(sb: Signed_Bigint) -> (bool, [u1;noir_bigint::MAX_BITS]) {
     let bits = sb.val.to_bits();
     (sb.sign, bits)
 }
+
 
 // a == b => 0
 // a > b => 1
@@ -123,6 +145,8 @@ fn compare(sb1: Signed_Bigint, sb2: Signed_Bigint) -> u32 {
     }
 }
 
+
+// Returns true if the two Signed_Bigints are equal
 fn isEqual(sb1: Signed_Bigint, sb2: Signed_Bigint) -> bool {
     if (sb1.sign != sb2.sign){
         false
@@ -132,6 +156,8 @@ fn isEqual(sb1: Signed_Bigint, sb2: Signed_Bigint) -> bool {
     }
 }
 
+
+// Returns false if the two Signed_Bigints are equal
 fn isNotEqual(sb1: Signed_Bigint, sb2: Signed_Bigint) -> bool {
     if (sb1.sign != sb2.sign){
         true
@@ -141,6 +167,8 @@ fn isNotEqual(sb1: Signed_Bigint, sb2: Signed_Bigint) -> bool {
     }
 }
 
+
+// Returns true if a > b for two Signed_Bigints
 fn isGreater(sb1: Signed_Bigint, sb2: Signed_Bigint) -> bool {
     if (sb1.sign != sb2.sign){
         if sb1.sign {
@@ -160,6 +188,8 @@ fn isGreater(sb1: Signed_Bigint, sb2: Signed_Bigint) -> bool {
     }
 }
 
+
+// Returns true if a >= b for two Signed_Bigints
 fn isGreaterOrEq(sb1: Signed_Bigint, sb2: Signed_Bigint) -> bool {
     if (sb1.sign != sb2.sign){
         if sb1.sign {
@@ -179,6 +209,8 @@ fn isGreaterOrEq(sb1: Signed_Bigint, sb2: Signed_Bigint) -> bool {
     }
 }
 
+
+// Returns true if a < b for two Signed_Bigints
 fn isLesser(sb1: Signed_Bigint, sb2: Signed_Bigint) -> bool {
     if (sb1.sign != sb2.sign){
         if sb1.sign {
@@ -199,6 +231,7 @@ fn isLesser(sb1: Signed_Bigint, sb2: Signed_Bigint) -> bool {
 }
 
 
+// Returns true if a <= b for two Signed_Bigints
 fn isLesserOrEq(sb1: Signed_Bigint, sb2: Signed_Bigint) -> bool {
     if (sb1.sign != sb2.sign){
         if sb1.sign {
@@ -218,6 +251,15 @@ fn isLesserOrEq(sb1: Signed_Bigint, sb2: Signed_Bigint) -> bool {
     }
 }
 
+
+// Returns the number of bits in the Big Int component
+fn nBits(sb: Signed_Bigint) -> u56 {
+    let n = sb.val.nbits();
+    n
+}
+
+
+// Adds two Signed_Bigints
 fn add(sb1: Signed_Bigint, sb2: Signed_Bigint) -> Signed_Bigint {
     if (sb1.sign == sb2.sign){
         let sum = sb1.val.add(sb2.val);
@@ -247,6 +289,8 @@ fn add(sb1: Signed_Bigint, sb2: Signed_Bigint) -> Signed_Bigint {
     }
 }
 
+
+// Subtracts the second Signed_Bigint from the first
 fn subtract(sb1: Signed_Bigint, sb2: Signed_Bigint) -> Signed_Bigint {
     if (sb1.sign != sb2.sign){
         let sum = sb1.val.add(sb2.val);
@@ -276,6 +320,8 @@ fn subtract(sb1: Signed_Bigint, sb2: Signed_Bigint) -> Signed_Bigint {
     }
 }
 
+
+// Multiplies two Signed_Bigints
 fn multiply(sb1: Signed_Bigint, sb2: Signed_Bigint) -> (Signed_Bigint, Signed_Bigint) {
     let mul = sb1.val.mul(sb2.val);
     let sblo = Signed_Bigint {
@@ -289,6 +335,8 @@ fn multiply(sb1: Signed_Bigint, sb2: Signed_Bigint) -> (Signed_Bigint, Signed_Bi
     (sblo, sbhi)
 }
 
+
+// Divides the first Signed_Bigint by the second, returns the Quotient
 fn divide(sb1: Signed_Bigint, sb2: Signed_Bigint) -> Signed_Bigint {
     let div = sb1.val.div(sb2.val);
     let sb = Signed_Bigint {
@@ -298,6 +346,8 @@ fn divide(sb1: Signed_Bigint, sb2: Signed_Bigint) -> Signed_Bigint {
     sb
 }
 
+
+// Returns the remainder when the first Signed_Bigint is divided by the second
 fn remainder(sb1: Signed_Bigint, sb2: Signed_Bigint) -> Signed_Bigint {
     let div = sb1.val.div(sb2.val);
     let rem = div.1;
@@ -318,6 +368,51 @@ fn remainder(sb1: Signed_Bigint, sb2: Signed_Bigint) -> Signed_Bigint {
     
 }
 
+
+// Left shifts the Signed_Bigint by n places
+fn shift_left(sb: Signed_Bigint, n: u56) -> Signed_Bigint {
+    assert (n < noir_bigint::MAX_BITS as u56);
+    let sh = sb.val.shl(n);
+    let res = Signed_Bigint {
+        sign: sb.sign,
+        val: sh,
+    };
+    res 
+}
+
+
+// Right shifts the Signed_Bigint by n places
+fn shift_right(sb: Signed_Bigint, n: u56) -> Signed_Bigint {
+    assert (n < noir_bigint::MAX_BITS as u56);
+    let mut res = noir_bigint::BigUint56::zero();
+
+    if n < noir_bigint::MAX_BITS as u56 {
+        let shift_num = n / (noir_bigint::BITS_PER_LIMB as u56);
+        let rem = n % (noir_bigint::BITS_PER_LIMB as u56);
+
+       
+        for i in 0..noir_bigint::NUM_LIMBS {
+            if i as u56 + shift_num < noir_bigint::NUM_LIMBS as u56 {
+                res.limbs[i] = sb.val.limbs[i + shift_num as Field];
+            }
+        }
+
+        res = res.shr_limb(rem);
+
+        if (!sb.sign){
+            if (rem != 0 as u56){
+                res = res.add(noir_bigint::BigUint56::one());
+            }
+        } 
+    }
+
+    
+    let final = Signed_Bigint {
+        sign: sb.sign,
+        val: res,
+    };
+    final
+}
 
 
 #[test]
@@ -420,4 +515,104 @@ fn test_subtract2() {
     let diff = subtract(sb1, sb2);
     let other = toSignedBigint(false, c);
     assert (isEqual(diff, other));
+}
+
+
+#[test]
+fn test_lshift() {
+    let a = from_bytes(true, [1, 2]);
+    let b = shift_left(a, 0);
+
+    assert(compare(a, b) == 0);
+}
+
+#[test]
+fn test_lshift2() {
+    let a = from_bytes(true, [1, 2]);
+    let b = shift_left(a, 1);
+
+    let bytes = to_bytes(b);
+
+    let mut expected = [0 as u8; noir_bigint::MAX_BYTES];
+    expected[0] = 2;
+    expected[1] = 4;
+
+    assert(bytes.1 == expected);
+}
+
+
+#[test]
+fn test_lshift3() {
+    let a = from_u56(true, 6 as u56);
+    let b = shift_left(a, 2);
+
+    assert(compare(b, from_u56(true, 24 as u56)) == 0);
+}
+
+
+#[test]
+fn test_lshift4() {
+    let a = from_u56(false, 6 as u56);
+    let b = shift_left(a, 2);
+
+    assert(compare(b, from_u56(false, 24 as u56)) == 0);
+}
+
+
+#[test]
+fn test_lshift5() {
+    let a = from_bytes(false, [1, 2]);
+    let b = shift_left(a, 1);
+
+    let bytes = to_bytes(b);
+
+    let mut expected = [0 as u8; noir_bigint::MAX_BYTES];
+    expected[0] = 2;
+    expected[1] = 4;
+
+    assert(bytes.1 == expected);
+    assert (!bytes.0);
+}
+
+
+#[test]
+fn test_rshift() {
+    let a = from_bytes(true, [1, 2]);
+    let b = shift_right(a, 0);
+
+    assert(compare(a,b) == 0);
+}
+
+#[test]
+fn test_rshift2() {
+    let a = from_bytes(true, [0, 1, 2]);
+    let b = shift_right(a, 8);
+
+    assert(compare(b, from_bytes(true, [1, 2])) == 0);
+}
+
+#[test]
+fn test_rshift3() {
+    let a = from_bytes(false, [0, 1, 2]);
+    let b = shift_right(a, 8);
+    let c = from_bytes(false, [1,2]);
+    assert(compare(b, c) == 2); // because of the remainder obtained, b is decremented by 1
+    assert (compare(subtract(b, c), from_u56(false, 1)) == 0);
+}
+
+#[test]
+fn test_rshift4() {
+    let a = from_u56(true, 21 as u56);
+    let b = shift_right(a, 2);
+
+    assert(compare(b, from_u56(true, 5 as u56)) == 0);
+}
+
+
+#[test]
+fn test_rshift5() {
+    let a = from_u56(false, 23 as u56);
+    let b = shift_right(a, 3);
+
+    assert(compare(b, from_u56(false, 3 as u56)) == 0);
 }
