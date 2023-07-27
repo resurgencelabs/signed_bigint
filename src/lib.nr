@@ -386,6 +386,23 @@ fn shift_right(sb: Signed_Bigint, n: u56) -> Signed_Bigint {
     assert (n < noir_bigint::MAX_BITS as u56);
     let mut res = noir_bigint::BigUint56::zero();
 
+    let mut pow = noir_bigint::BigUint56::one();
+
+    for i in 0..280{
+        let mut j = i as u56;
+        if j < n {
+            let x = from_u56(true, 2);
+            let mut temp = pow.mul(x.val);
+            pow = temp.0;
+        }
+    };
+
+    let final_value = sb.val.div(pow);
+    let mut r = 0;
+    if (!final_value.0.mul(pow).0.eq(sb.val)) {
+        r = 1;
+    }
+
     if n < noir_bigint::MAX_BITS as u56 {
         let shift_num = n / (noir_bigint::BITS_PER_LIMB as u56);
         let rem = n % (noir_bigint::BITS_PER_LIMB as u56);
@@ -400,7 +417,7 @@ fn shift_right(sb: Signed_Bigint, n: u56) -> Signed_Bigint {
         res = res.shr_limb(rem);
 
         if (!sb.sign){
-            if (rem != 0 as u56){
+            if (r != 0 as u56){
                 res = res.add(noir_bigint::BigUint56::one());
             }
         } 
@@ -412,6 +429,20 @@ fn shift_right(sb: Signed_Bigint, n: u56) -> Signed_Bigint {
         val: res,
     };
     final
+}
+
+
+// Shifts the Signed Bigint one place to the left
+fn shift1_left(sb: Signed_Bigint) -> Signed_Bigint {
+    let res = shift_left(sb, 1 as u56);
+    res
+}
+
+
+// Shifts the Signed Bigint one place to the right
+fn shift1_right(sb: Signed_Bigint) -> Signed_Bigint {
+    let res = shift_right(sb, 1 as u56);
+    res
 }
 
 
@@ -596,8 +627,8 @@ fn test_rshift3() {
     let a = from_bytes(false, [0, 1, 2]);
     let b = shift_right(a, 8);
     let c = from_bytes(false, [1,2]);
-    assert(compare(b, c) == 2); // because of the remainder obtained, b is decremented by 1
-    assert (compare(subtract(b, c), from_u56(false, 1)) == 0);
+    assert(compare(b, c) == 0); 
+    
 }
 
 #[test]
@@ -615,4 +646,21 @@ fn test_rshift5() {
     let b = shift_right(a, 3);
 
     assert(compare(b, from_u56(false, 3 as u56)) == 0);
+}
+
+
+#[test]
+fn test_rshift6() {
+    let a = from_u56(false, 32 as u56);
+    let b = shift_right(a, 2);
+
+    assert(compare(b, from_u56(false, 8 as u56)) == 0);
+}
+
+#[test]
+fn test_rshift7() {
+    let a = from_u56(false, 34 as u56);
+    let b = shift_right(a, 2);
+
+    assert(compare(b, from_u56(false, 9 as u56)) == 0);
 }
