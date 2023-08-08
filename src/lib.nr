@@ -33,6 +33,16 @@ fn sign(sb: Signed_Bigint) -> bool {
 }
 
 
+// Returns the Same Big Integer but with its Sign reversed
+fn invert_sign(sb: Signed_Bigint) -> Signed_Bigint {
+    let s = Signed_Bigint {
+        sign: !(sb.sign),
+        val: sb.val,
+    };
+    s
+}
+
+
 // Generates a Signed_Bigint variable with value 0
 fn zero() -> Signed_Bigint {
     let b = noir_bigint::BigUint56 { limbs: [0 as u56; noir_bigint::NUM_LIMBS] };
